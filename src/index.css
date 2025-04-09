@@ -1,10 +1,12 @@
 /* filepath: d:\Organization structure\Organization-chart\src\styles\OrgChart.css */
-.p-organizationchart .p-organizationchart-node-content {
+
+
+ .p-organizationchart .p-organizationchart-node-content {
   position: relative;
 }
 
 .p-organizationchart .p-organizationchart-line {
-  border-color: #ccc !important; /* Ensure lines are visible */
+  border-color: #ccc !important; 
 }
 
 .p-organizationchart .p-organizationchart-line-top {
@@ -17,4 +19,4 @@
 
 .p-organizationchart .p-organizationchart-line-right {
   border-left: 1px solid #ccc !important;
-}
+} 
