@@ -1,0 +1,14 @@
+{
+    "request": {
+      "method": "GET",
+      "url": "/api/hello"
+    },
+    "response": {
+      "status": 200,
+      "body": "Hello, WireMock!",
+      "headers": {
+        "Content-Type": "text/plain"
+      }
+    }
+  }
+  

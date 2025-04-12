@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { OrganizationChart } from "primereact/organizationchart";
 import { Modal, Button, Form } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function ColoredDemo() {
   const [data, setData] = useState([
