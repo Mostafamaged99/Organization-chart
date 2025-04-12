@@ -1,87 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { OrganizationChart } from "primereact/organizationchart";
 import { Modal, Button, Form } from "react-bootstrap";
+import { getData } from "../services/apiSevices";
 
 export default function ColoredDemo() {
-  const [data, setData] = useState([
-    {
-      expanded: true,
-      type: "person",
-      className: "bg-primary text-white",
-      style: { borderRadius: "12px" },
-      data: {
-        name: "Amy Elsner",
-        title: "CEO",
-      },
-      children: [
-        {
-          expanded: true,
-          type: "person",
-          className: "bg-info text-white",
-          style: { borderRadius: "12px" },
-          data: {
-            name: "Anna Fali",
-            title: "CMO",
-          },
-          children: [
-            {
-              expanded: true,
-              type: "person",
-              className: "bg-info text-white",
-              style: { borderRadius: "12px" },
-              data: {
-                name: "Ali Connors",
-                title: "Sales Associate",
-              },
-            },
-            {
-              expanded: true,
-              type: "person",
-              className: "bg-info text-white",
-              style: { borderRadius: "12px" },
-              data: {
-                name: "Yasser Dali",
-                title: "Marketing Associate",
-              },
-            },
-          ],
-        },
-        {
-          expanded: true,
-          type: "person",
-          className: "bg-info text-white",
-          style: { borderRadius: "12px" },
-          data: {
-            name: "Stephen Shaw",
-            title: "CTO",
-          },
-          children: [
-            {
-              expanded: true,
-              type: "person",
-              className: "bg-info text-white",
-              style: { borderRadius: "12px" },
-              data: {
-                name: "Yarah Ali",
-                title: "Software Engineer",
-              },
-            },
-            {
-              expanded: true,
-              type: "person",
-              className: "bg-info text-white",
-              style: { borderRadius: "12px" },
-              data: {
-                name: "Sara Smith",
-                title: "AI Engineer",
-              },
-            },
-          ],
-        },
-      ],
-    },
-  ]);
-
+  const [orgData, setOrgData] = useState(null); // Initialize as null
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(""); // "add" or "edit"
   const [currentNode, setCurrentNode] = useState(null);
@@ -133,9 +56,9 @@ export default function ColoredDemo() {
         currentNode.children.forEach(addChildNode);
       }
     };
-    const updatedData = [...data];
+    const updatedData = [...orgData];
     updatedData.forEach(addChildNode);
-    setData(updatedData);
+    setOrgData(updatedData);
   };
 
   const editNode = (node, newName, newTitle) => {
@@ -147,9 +70,9 @@ export default function ColoredDemo() {
         currentNode.children.forEach(updateNodeData);
       }
     };
-    const updatedData = [...data];
+    const updatedData = [...orgData];
     updatedData.forEach(updateNodeData);
-    setData(updatedData);
+    setOrgData(updatedData);
   };
 
   const deleteNode = (node) => {
@@ -168,8 +91,8 @@ export default function ColoredDemo() {
         })
         .filter((n) => n !== null);
     };
-    const updatedData = deleteNodeRecursively([...data], node.data.name);
-    setData(updatedData);
+    const updatedData = deleteNodeRecursively([...orgData], node.data.name);
+    setOrgData(updatedData);
   };
 
   const nodeTemplate = (node) => {
@@ -206,9 +129,24 @@ export default function ColoredDemo() {
     return node.label;
   };
 
+  useEffect(() => {
+    getData("organization")
+      .then((res) => {
+        setOrgData(res.data);
+        console.log("data", res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <div className="card overflow-x-auto m-5 pt-3">
-      <OrganizationChart value={data} nodeTemplate={nodeTemplate} />
+      {orgData ? (
+        <OrganizationChart value={orgData} nodeTemplate={nodeTemplate} />
+      ) : (
+        <div>Loading...</div>
+      )}
 
       {/* Modal for Add/Edit */}
       <Modal show={showModal} onHide={handleCloseModal}>
