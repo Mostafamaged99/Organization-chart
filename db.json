@@ -1,0 +1,80 @@
+{
+  "organization": [
+    {
+      "expanded": true,
+      "type": "person",
+      "className": "bg-primary text-white",
+      "style": { "borderRadius": "12px" },
+      "data": {
+        "name": "Amy Elsner",
+        "title": "CEO"
+      },
+      "children": [
+        {
+          "expanded": true,
+          "type": "person",
+          "className": "bg-info text-white",
+          "style": { "borderRadius": "12px" },
+          "data": {
+            "name": "Anna Fali",
+            "title": "CMO"
+          },
+          "children": [
+            {
+              "expanded": true,
+              "type": "person",
+              "className": "bg-info text-white",
+              "style": { "borderRadius": "12px" },
+              "data": {
+                "name": "Ali Connors",
+                "title": "Sales Associate"
+              }
+            },
+            {
+              "expanded": true,
+              "type": "person",
+              "className": "bg-info text-white",
+              "style": { "borderRadius": "12px" },
+              "data": {
+                "name": "Yasser Dali",
+                "title": "Marketing Associate"
+              }
+            }
+          ]
+        },
+        {
+          "expanded": true,
+          "type": "person",
+          "className": "bg-info text-white",
+          "style": { "borderRadius": "12px" },
+          "data": {
+            "name": "Stephen Shaw",
+            "title": "CTO"
+          },
+          "children": [
+            {
+              "expanded": true,
+              "type": "person",
+              "className": "bg-info text-white",
+              "style": { "borderRadius": "12px" },
+              "data": {
+                "name": "Yarah Ali",
+                "title": "Software Engineer"
+              }
+            },
+            {
+              "expanded": true,
+              "type": "person",
+              "className": "bg-info text-white",
+              "style": { "borderRadius": "12px" },
+              "data": {
+                "name": "Sara Smith",
+                "title": "AI Engineer"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
