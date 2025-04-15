@@ -1,13 +1,18 @@
-import './App.css'
-import OrgChart from './pages/OrgChart'
+import { Suspense, lazy } from "react";
+import "./App.css";
+
+const OrgChart = lazy(() => import("./pages/OrgChart"));
 
 function App() {
-
   return (
     <>
-     <OrgChart />
+      <Suspense fallback={<div>Loading...</div>}>
+        <OrgChart />
+      </Suspense>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
+
+
