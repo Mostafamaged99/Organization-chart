@@ -2,6 +2,7 @@ import fs from "fs";
 
 // Load the base structure from your existing JSON file
 const baseData = {
+  id: 1, // Assign ID at the root level
   expanded: true,
   type: "person",
   className: "bg-primary text-white",
@@ -15,14 +16,13 @@ const baseData = {
 };
 
 // Global counter for sequential IDs
-let idCounter = 1;
+let idCounter = 2; // Start from 2 since the root node already has ID 1
 
 // Possible employment types
 const employmentTypes = ["Full-time", "Part-time", "Freelance"];
 
-// Function to generate a unique name, title, id, and employment type
+// Function to generate a unique name, title, and employment type
 const generateUniqueData = (name, title) => ({
-  id: idCounter++, // Increment the global counter for each user
   name: name || `Person ${idCounter}`,
   title: title || `Title ${idCounter}`,
   employmentType: employmentTypes[Math.floor(Math.random() * employmentTypes.length)], // Random employment type
@@ -46,11 +46,12 @@ const generateChildren = (depth, maxDepth) => {
   const titles = positions[depth] || []; // Get titles for the current depth
   for (let i = 0; i < titles.length; i++) {
     children.push({
+      id: idCounter++, // Assign ID at the root level
       expanded: true,
       type: "person",
       className: "bg-info text-white",
       style: { borderRadius: "12px" },
-      data: generateUniqueData(`Person ${idCounter}`, titles[i]),
+      data: generateUniqueData(`Person ${idCounter}`, titles[i]), // Generate data without ID
       children: generateChildren(depth + 1, maxDepth),
     });
   }
@@ -62,7 +63,6 @@ const generateOrganization = () => {
   const maxDepth = Object.keys(positions).length; // Maximum depth of the hierarchy
 
   const root = { ...baseData };
-  root.data = generateUniqueData("Amy Elsner", "CEO"); // Assign the CEO
   root.children = generateChildren(1, maxDepth);
 
   return root;

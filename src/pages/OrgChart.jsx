@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import { OrganizationChart } from "primereact/organizationchart";
 import { Modal, Button, Form } from "react-bootstrap";
-import { getData } from "../services/apiSevices";
 import { Dropdown } from "react-bootstrap";
 import { ThreeDots, Pencil, Eye, Pause, Trash } from "react-bootstrap-icons";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { getData } from "../services/apiSevices";
 
 export default function ColoredDemo() {
-  const [orgData, setOrgData] = useState(null); // Initialize as null
+  const [orgData, setOrgData] = useState(null); // Original organization data
+  const [filteredData, setFilteredData] = useState(null); // Filtered data for display
+  const [searchQuery, setSearchQuery] = useState(""); // Search query
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(""); // "add" or "edit"
   const [currentNode, setCurrentNode] = useState(null);
@@ -24,6 +26,7 @@ export default function ColoredDemo() {
     getData("organization")
       .then((res) => {
         setOrgData(res.data);
+        setFilteredData(res.data); // Initialize filtered data
         console.log("data", res.data);
       })
       .catch((err) => {
@@ -39,11 +42,29 @@ export default function ColoredDemo() {
     }
   }, [orgData]);
 
-  const handleChartLoad = () => {
-    if (ceoRef.current && transformRef.current) {
-      const { offsetTop } = ceoRef.current;
-      transformRef.current.centerView(0, offsetTop);
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  
+    if (!query) {
+      setFilteredData(orgData); // Reset to original data if query is empty
+      return;
     }
+
+    const filterNodes = (nodes) => {
+      return nodes
+        .map((node) => {
+          const matches = node.data.title.toLowerCase().includes(query.toLowerCase());
+          const filteredChildren = node.children ? filterNodes(node.children) : [];
+          if (matches || filteredChildren.length > 0) {
+            return { ...node, children: filteredChildren };
+          }
+          return null;
+        })
+        .filter((node) => node !== null);
+    };
+
+    const filtered = filterNodes(orgData);
+    setFilteredData(filtered);
   };
 
   const handleShowModal = (type, node) => {
@@ -235,6 +256,17 @@ export default function ColoredDemo() {
       className="card overflow-x-auto m-5 pt-3"
       style={{ width: "100vw", height: "100vh" }}
     >
+      {/* Search Bar */}
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control w-50 mx-auto"
+          placeholder="Search by position..."
+          value={searchQuery}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+      </div>
+
       <TransformWrapper
         ref={transformRef}
         initialScale={1}
@@ -268,9 +300,16 @@ export default function ColoredDemo() {
               </button>
               <button
                 onClick={() => {
-                  if (ceoRef.current && transformRef.current) {
-                    const { offsetTop } = ceoRef.current;
-                    transformRef.current.centerView(0, offsetTop);
+                  if (transformRef.current && ceoRef.current) {
+                    // Center the view on the CEO card
+                    const { offsetLeft, offsetTop } = ceoRef.current;
+                    transformRef.current.centerView(offsetLeft, offsetTop);
+
+                    // Simulate pressing the Zoom Out button three times with delays
+                    const { zoomOut } = transformRef.current;
+                    setTimeout(() => zoomOut(), 200); // First zoom out after 200ms
+                    setTimeout(() => zoomOut(), 400); // Second zoom out after 400ms
+                    setTimeout(() => zoomOut(), 600); // Third zoom out after 600ms
                   }
                 }}
                 className="btn btn-secondary"
@@ -290,11 +329,10 @@ export default function ColoredDemo() {
               }}
             >
               <div className="card overflow-x-auto m-5 pt-3">
-                {orgData ? (
+                {filteredData ? (
                   <OrganizationChart
-                    value={orgData}
+                    value={filteredData}
                     nodeTemplate={nodeTemplate}
-                    onLoad={handleChartLoad}
                   />
                 ) : (
                   <div>Loading...</div>
